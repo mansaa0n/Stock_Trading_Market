@@ -13,6 +13,7 @@
 #include "stock.h"
 #include "person.cpp"
 #include <random>
+#include "STOCKCLASS.h"
 
 using namespace std;
 
@@ -43,9 +44,7 @@ double RandPrice(double fMin, double fMax)
 void man_BS_thread()
 {
     
-   string stockName = RandomStock(3);
-    double price = RandPrice(10, 50);
-       
+    
     lock_guard<mutex> lock(stockLock);  //  stocklock
     ++i;
     
@@ -67,6 +66,18 @@ void stock_manager_thread()
 
 int main()
 {
+    vector <> STOCKS;
+    
+    for (int i =0; i < 10; i++)
+    {
+    string [i]stockName = RandomStock(3);
+    double [i]price = RandPrice(10, 50);
+    STOCKS.pushback(
+    }
+    
+    
+    
+
      cout << __func__ << ": " << i << '\n';
     
     thread t1(man_BS_thread);

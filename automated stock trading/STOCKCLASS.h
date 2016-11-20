@@ -8,17 +8,19 @@
 #ifndef STOCKCLASS_h
 #define STOCKCLASS_h
 #include <vector>
-#include <isotream>
+#include <iostream>
+
 using namespace std;
 
 class STOCKCLASS{
     
     vector <double> StockPrice;
     vector <string> StockName;
-    
-   // StockPrice.push_back(double i);
+public:
+    void  gen_Stock(string a, double b){
+       // StockPrice.push_back(double i);
    // stockName.push_back(string a);
-    
+}
     
 };
 
