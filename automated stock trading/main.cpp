@@ -10,37 +10,52 @@
 #include <thread>
 #include <mutex>
 #include <vector>
+#include "stock.h"
+#include "person.cpp"
+#include <random>
+
 using namespace std;
 
-class stock_trading {
-    vector <int> PurchaseStocks;
-public:
-    
-           //     saprate files
-};
 
 // globle variables
 int i = 0;
+int transactions; // incremnt trans when ever b/s in man thread
 mutex stockLock;  // protects i
 
 
+string RandomStock(int len)
+{
+    string str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    int pos;
+    while(str.size() != len) {
+        pos = ((rand() % ((str.size() - 1))));
+        str.erase (pos, 1);
+    }
+    return str;
+}
+
+double RandPrice(double fMin, double fMax)
+{
+    double f = (double)rand() / RAND_MAX;
+    return fMin + f * (fMax - fMin);
+}
+
 void man_BS_thread()
 {
-    double balance;
-    vector <stock_trading> PurchaseStocks;
-    double buyThreshold;
-    double sellThreshold;
     
-    lock_guard<std::mutex> lock(stockLock);  // change to stocklock
+   string stockName = RandomStock(3);
+    double price = RandPrice(10, 50);
+       
+    lock_guard<mutex> lock(stockLock);  //  stocklock
     ++i;
     
-    std::cout << std::this_thread::get_id() << ": " << i << '\n';
+       cout << this_thread::get_id() << ": " << i << '\n' << stockName <<" $"<< price <<'\n';
     
-    // g_i_mutex is automatically released when lock goes out of scope
+    // i mutex is automatically released when lock goes out of scope
 }
 void stock_manager_thread()
 {
-    std::string name;
+           string name;
     int    share;
     double price_per_share;
     
@@ -52,10 +67,10 @@ void stock_manager_thread()
 
 int main()
 {
-    std::cout << __func__ << ": " << i << '\n';
+     cout << __func__ << ": " << i << '\n';
     
-    std::thread t1(man_BS_thread);
-    std::thread t2(man_BS_thread);
+    thread t1(man_BS_thread);
+    thread t2(man_BS_thread);
     
     t1.join();
     t2.join();

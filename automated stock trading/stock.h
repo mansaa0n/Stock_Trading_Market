@@ -14,7 +14,7 @@ using namespace std;
 
 class stock_trading {
     public:
-    vector <int> PurchaseStocks;
+    vector <int> PurchaseStocks;  // adjust type
 
     //     saprate files
 };
