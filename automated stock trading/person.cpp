@@ -6,8 +6,7 @@
 //  Copyright © 2016 Fresno State Electric & Computer Eng. All rights reserved.
 //
 
-
-#include <vector>
-#include "stock.h"
+#include "libraries .h"
 
 using namespace std;
+

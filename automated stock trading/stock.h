@@ -8,14 +8,8 @@
 #ifndef stock_h
 #define stock_h
 
-#include <iostream>
-#include <thread>
-#include <mutex>
-#include <vector>
-#include "stock.h"
-#include "person.cpp"
-#include <random>
-#include "STOCKCLASS.h"
+#include "libraries .h"
+
 
 using namespace std;
 
