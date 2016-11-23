@@ -6,6 +6,7 @@
 //  Copyright © 2016 Fresno State Electric & Computer Eng. All rights reserved.
 //
 
+// call all library needed
 #include <iostream>
 #include <thread>
 #include <mutex>
@@ -14,77 +15,42 @@
 #include "person.cpp"
 #include <random>
 #include "STOCKCLASS.h"
-
+#include <ctime>
+// using names form standered library
 using namespace std;
-
-
-// globle variables
+// declairing globel varibles(int, locks, codition vriables) that can be acceccble by all func.
 int i = 0;
-int transactions; // incremnt trans when ever b/s in man thread
-mutex stockLock;  // protects i
+mutex marketlock;
+
+// condition_variable isPriceSatisfied;
 
 
-string RandomStock(int len)
-{
-    string str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    int pos;
-    while(str.size() != len) {
-        pos = ((rand() % ((str.size() - 1))));
-        str.erase (pos, 1);
-    }
-    return str;
+
+// Random generator of stocks and its prices
+string RandomStock(int len){
+    string ShareName;
+    vector<string> SharesNames = {"BAC", "RF", "CHK", "GPS", "F", "WFC","GE","VALE","WFT","C","PFE","CRM","JPM","FCX","ANF","VRX","T","AKS","S","KEY","MS","KO","CX","X","WLL","KGC","IG","PG","ABX","MRO","HL","PBR","SWN","JCP","VALE.P","AUY","VZ","ECA","BBY","MT","NE","GGB","AGN","WMT","HPQ","LOW","BBD","CTL","MGM","UA","DNR","USB","GM","ETE","DIS","NEM","GG","HBI","XOM","COP","IAG","DAL","RAD","WNR","HST","CF","V","TCK","JNJ","MRK","BBT","ESV","CVS","NKE","RGC","RDC","CLF","GNW","ABT"};
+    
+        int randIndx = rand()% SharesNames.size();
+    
+        return SharesNames[randIndx];
 }
+double RandPrice(double fMin,double fMax){
+                  double f = (double)rand()/RAND_MAX;
+                  return fMin + f * (fMax-fMin);
+              }
 
-double RandPrice(double fMin, double fMax)
-{
-    double f = (double)rand() / RAND_MAX;
-    return fMin + f * (fMax - fMin);
-}
+// Buying and Selling Thread
 
-void man_BS_thread()
-{
-    
-    
-    lock_guard<mutex> lock(stockLock);  //  stocklock
-    ++i;
-    
-       cout << this_thread::get_id() << ": " << i << '\n' << stockName <<" $"<< price <<'\n';
-    
-    // i mutex is automatically released when lock goes out of scope
-}
-void stock_manager_thread()
-{
-           string name;
-    int    share;
-    double price_per_share;
-    
-    // thread goes here
+void Person_BS_Thread(){
+    lock_guard<mutex> lock(marketlock); //marketlock
     
 }
 
-
-
+// main fuction of the program
 int main()
 {
-    vector <> STOCKS;
-    
-    for (int i =0; i < 10; i++)
-    {
-    string [i]stockName = RandomStock(3);
-    double [i]price = RandPrice(10, 50);
-    STOCKS.pushback(
-    }
     
     
-    
-
-     cout << __func__ << ": " << i << '\n';
-    
-    thread t1(man_BS_thread);
-    thread t2(man_BS_thread);
-    
-    t1.join();
-    t2.join();
-    
-    cout << __func__ << ": " << i << '\n';
+    return 0;
 }

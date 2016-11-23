@@ -9,19 +9,9 @@
 #define STOCKCLASS_h
 #include <vector>
 #include <iostream>
+#include "stock.h"
 
 using namespace std;
 
-class STOCKCLASS{
-    
-    vector <double> StockPrice;
-    vector <string> StockName;
-public:
-    void  gen_Stock(string a, double b){
-       // StockPrice.push_back(double i);
-   // stockName.push_back(string a);
-}
-    
-};
 
-#endif /* STOCKCLASS_h */
+  #endif /* STOCKCLASS_h */
