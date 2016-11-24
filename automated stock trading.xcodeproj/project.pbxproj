@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E233BC2B1DD57B58000173E2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E233BC2A1DD57B58000173E2 /* main.cpp */; };
-		E233BC331DD57CF8000173E2 /* person.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E233BC311DD57CF8000173E2 /* person.cpp */; };
+		E233BC331DD57CF8000173E2 /* person.h in Sources */ = {isa = PBXBuildFile; fileRef = E233BC311DD57CF8000173E2 /* person.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,12 +24,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		E20B5F981DE5808300CB9E00 /* libraries .h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "libraries .h"; sourceTree = "<group>"; };
 		E233BC271DD57B58000173E2 /* automated stock trading */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "automated stock trading"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E233BC2A1DD57B58000173E2 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		E233BC311DD57CF8000173E2 /* person.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = person.cpp; sourceTree = "<group>"; };
-		E28752EC1DE06A6D00F137AA /* STOCKCLASS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STOCKCLASS.h; sourceTree = "<group>"; };
-		E2F771BD1DDE662E00A98614 /* stock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stock.h; sourceTree = "<group>"; };
+		E233BC311DD57CF8000173E2 /* person.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; path = person.h; sourceTree = "<group>"; };
+		E2F771BD1DDE662E00A98614 /* stock.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; path = stock.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,10 +61,8 @@
 			isa = PBXGroup;
 			children = (
 				E233BC2A1DD57B58000173E2 /* main.cpp */,
-				E20B5F981DE5808300CB9E00 /* libraries .h */,
 				E2F771BD1DDE662E00A98614 /* stock.h */,
-				E28752EC1DE06A6D00F137AA /* STOCKCLASS.h */,
-				E233BC311DD57CF8000173E2 /* person.cpp */,
+				E233BC311DD57CF8000173E2 /* person.h */,
 			);
 			path = "automated stock trading";
 			sourceTree = "<group>";
@@ -129,7 +125,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E233BC331DD57CF8000173E2 /* person.cpp in Sources */,
+				E233BC331DD57CF8000173E2 /* person.h in Sources */,
 				E233BC2B1DD57B58000173E2 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
