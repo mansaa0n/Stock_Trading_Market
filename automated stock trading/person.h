@@ -102,6 +102,20 @@ public:
         }
         
     }
+    
+    void PrintPerson(){
+        cout << name << " $" << balance << endl;
+        for ( int i =0;  i< ownedStocks.size(); i++){
+            cout << ownedStocks[i].name << " $" << ownedStocks[i].price << " quantity: " << quantityShares[i] << endl;
+        }
+    }
+    
+    Stock getRandStock(){
+        random_device random_devi;
+        mt19937 engine{random_devi()};
+        uniform_int_distribution<int>dist(0,ownedStocks.size()-1);
+        return ownedStocks[dist(engine)];
+    }
 };
 
 #endif

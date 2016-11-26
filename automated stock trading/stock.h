@@ -25,8 +25,10 @@ string RandomStock(){
     random_device random_devi;
     mt19937 engine{random_devi()};
     uniform_int_distribution<int>dist(0, SharesNames.size()-1);
+    uniform_int_distribution<int>alphabet(0, 25);
+    char suffix = 'A' + alphabet(engine);
     string randShares = SharesNames[dist(engine)];
-    return randShares;
+    return randShares + suffix;
 }
 double RandNumbers(double fMin,double fMax){
     random_device random_devi;
@@ -79,6 +81,20 @@ public:
         for(int i = 0; i < market.size(); i++) {
             cout << market[i].name << ", $" << market[i].price << endl;
         }
+    }
+    Stock getRandStock(){
+        random_device random_devi;
+        mt19937 engine{random_devi()};
+        uniform_int_distribution<int>dist(0,market.size()-1);
+        return market[dist(engine)];
+    }
+    Stock getStock(Stock S){
+        for (int i=0 ; i < market.size() ; i++){
+            if (S.name == market[i].name){
+                return market[i];
+            }
+        }
+        return Stock();
     }
 };
 
