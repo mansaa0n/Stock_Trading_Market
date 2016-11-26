@@ -67,6 +67,13 @@ public:
         }
         return -1;
     }
+    void setPrice(Stock s, double newPrice){
+        for(int i = 0; i < market.size(); i++) {
+            if(market[i].name == s.name)
+                market[i].price = newPrice;
+        }
+
+    }
     void printMarket() {
         // Couts the entire stock market and their prices.
         for(int i = 0; i < market.size(); i++) {

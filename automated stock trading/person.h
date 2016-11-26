@@ -17,7 +17,7 @@
 #include <ctime>
 #include <condition_variable>
 #include <string>
-#include <algorithm>
+//#include <algorithm>
 #include "stock.h"
 
 using namespace std;
@@ -39,13 +39,68 @@ public:
     double balance;
     vector<Stock> ownedStocks;
     vector<int> quantityShares;
+    double X;
+    double Y;
+    
     Person() {
         this->name = RandNames();
         this->balance = RandNumbers(1000,5000);
+        this->X = RandNumbers(20,50) * 0.01;
+        this->Y = RandNumbers(10,30) * 0.01;
     }
+    
     Person(string n, double b){
         this->name = n;
         this->balance = b;
+        this->X = RandNumbers(20,50) * 0.01;
+        this->Y = RandNumbers(10,30) * 0.01;
+    }
+    
+    void buyStock(Stock s, int q) {
+        if(balance < s.price * q) return;
+        ownedStocks.push_back(s);
+        quantityShares.push_back(q);
+        balance -= s.price * q;
+    }
+    
+    void sellStock(Stock s) {
+        // Look for the name of the same stock
+        for(int i = 0; i < ownedStocks.size(); i++) {
+            if(s.name == ownedStocks[i].name) {
+                balance += s.price * quantityShares[i];
+                ownedStocks.erase(ownedStocks.begin() + i);
+                quantityShares.erase(quantityShares.begin() + i);
+                return;
+            }
+        }
+    }
+    
+    bool buyDecision(Stock s, int q) {
+        double Z = (1 - (s.price*q)/balance);
+        double randomNumber = RandNumbers(0, 100);
+        if(randomNumber < Z*100)
+            return true;
+        else
+            return false;
+    }
+    
+    bool sellDecision(Stock s) {
+        // Look for the name of the same stock
+        int i;
+        for(i = 0; i < ownedStocks.size(); i++) {
+            if(s.name == ownedStocks[i].name) {
+                break;
+            }
+        }
+        
+        if( ownedStocks[i].price*(1+X) <= s.price ||
+           ownedStocks[i].price*(1-Y) >= s.price) {
+            return true;
+        }
+        else {
+            return false;
+        }
+        
     }
 };
 
