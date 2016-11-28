@@ -14,17 +14,13 @@
 #include <mutex>
 #include <vector>
 #include <random>
-#include <ctime>
-#include <condition_variable>
 #include <string>
-//#include <algorithm>
 #include "stock.h"
 
 using namespace std;
 
 string RandNames()
 {
-    //srand(time(0));
     vector<string> PeopleNames = {"Ahmed","Jhon", "Paul", "Daivd", "Sam", "Naithen", "Chandler", "Suzan", "Steve", "Joy", "Ross" };
     random_device random_dev;
     mt19937 engine{random_dev()};
@@ -41,19 +37,22 @@ public:
     vector<int> quantityShares;
     double X;
     double Y;
+    double originalBalance;
     
     Person() {
         this->name = RandNames();
         this->balance = RandNumbers(1000,5000);
-        this->X = RandNumbers(20,50) * 0.01;
-        this->Y = RandNumbers(10,30) * 0.01;
-    }
+        this->X = RandNumbers(15,25) * 0.01;
+        this->Y = RandNumbers(60,90) * 0.01;
+        this->originalBalance = this->balance;
+        }
     
     Person(string n, double b){
         this->name = n;
         this->balance = b;
-        this->X = RandNumbers(20,50) * 0.01;
-        this->Y = RandNumbers(10,30) * 0.01;
+        this->X = RandNumbers(15,25) * 0.01;
+        this->Y = RandNumbers(60,90) * 0.01;
+        this->originalBalance = this->balance;
     }
     
     void buyStock(Stock s, int q) {
@@ -76,8 +75,15 @@ public:
     }
     
     bool buyDecision(Stock s, int q) {
+        if(alreadyOwned(s))
+            return false;
         double Z = (1 - (s.price*q)/balance);
-        double randomNumber = RandNumbers(0, 100);
+        if(balance/originalBalance >= 1.25)
+            Z *= 0.5;
+        else {
+            Z *= balance/originalBalance;
+        }
+        double randomNumber = RandNumbers(40, 200);
         if(randomNumber < Z*100)
             return true;
         else
@@ -93,28 +99,66 @@ public:
             }
         }
         
-        if( ownedStocks[i].price*(1+X) <= s.price ||
-           ownedStocks[i].price*(1-Y) >= s.price) {
+        double goodPrice = ownedStocks[i].price*(1+X);
+        double badPrice = ownedStocks[i].price*(1-Y);
+        
+        if(ownedStocks[i].price == s.price) {
+            //cout << "==" << endl;
+            return false;
+        }
+        
+        if(goodPrice <= s.price) {
+            //cout << "GOOD PRICE: " << goodPrice << " <= " << s.price << endl;
+            return true;
+        }
+        else if (badPrice >= s.price) {
+            //cout << "BAD PRICE: " << badPrice << " >= " << s.price << endl;
             return true;
         }
         else {
+            //cout << "NO-SELL-G: " << goodPrice << " > " << s.price << endl;
+            //cout << "NO-SELL-B: " << badPrice << " < " << s.price << endl;
             return false;
         }
         
     }
     
     void PrintPerson(){
-        cout << name << " $" << balance << endl;
+        cout << name << " $" << balance << " Yielding $" << getYielding() <<  endl;
         for ( int i =0;  i< ownedStocks.size(); i++){
-            cout << ownedStocks[i].name << " $" << ownedStocks[i].price << " quantity: " << quantityShares[i] << endl;
+            cout << ownedStocks[i].name << " $" << ownedStocks[i].price << " Quantity owned: " << quantityShares[i] << endl;
         }
+        return;
     }
+   
     
-    Stock getRandStock(){
+    Stock getRandStockP(){
         random_device random_devi;
         mt19937 engine{random_devi()};
         uniform_int_distribution<int>dist(0,ownedStocks.size()-1);
         return ownedStocks[dist(engine)];
+    }
+
+    int getQuantity(Stock S){
+        for (int i=0 ; i < ownedStocks.size() ; i++){
+            if (S.name == ownedStocks[i].name){
+                return quantityShares[i];
+            }
+        }
+        return 0;
+        
+    }
+    
+    bool alreadyOwned(Stock S){
+        for (int i =0; i < ownedStocks.size();i++){
+            if(ownedStocks[i].name == S.name){
+                return true;
+            }
+        }
+        return false;
+    }
+    double getYielding(){
+        return balance - originalBalance;
     }
 };
 

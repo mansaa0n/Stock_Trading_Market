@@ -6,81 +6,75 @@
 //  Copyright © 2016 Fresno State Electric & Computer Eng. All rights reserved.
 //
 
-// call all library needed
-#include <chrono>
-#include <iostream>
-#include <thread>
-#include <mutex>
-#include <vector>
-#include <random>
-#include <ctime>
-#include <condition_variable>
-#include <string>
-#include "stock.h"
-#include "person.h"
-
+// call all libraries needed
+#include <chrono>   // time library
+#include <iostream> // I/O library
+#include <thread> //thread lib.
+#include <mutex> // lock lib.
+#include <vector> //vector lib.
+#include <random> // random lib.
+#include <string> // string lib.
+#include "stock.h" // custom header file "stock"
+#include "person.h"// custom header file "person"
 // using names form standered library
 using namespace std;
-// declairing globel varibles(int, locks) that can be acceccble by all func.
-int i = 0;
+// declairing globel varibles that can be acceccble by all func.
 mutex marketlock;
 mutex PersonLock;
 //condition_variable isPriceSatisfied;
-
-
-
-// server thread
-
 Person p;
-StockMarket sm;
-
+StockMarket sm; // updated price
+// server thread that will display the balance of the person after he/she sell or buy
+// This thread will wait for 10 seconds and then display the balance, knowing that buying and selling is done every 2 second, therefore there will be 5 transactions before the alance is being displayed.
 void ServerThread(){
-    //chrono::seconds waitTime(5);
+   // chrono::seconds waitTime(1);
     //this_thread::sleep_for(waitTime);
     lock_guard<mutex> lock(PersonLock);
     p.PrintPerson();
 }
-
+// This thread will set a new price to the stock
 void PriceThread(){
     lock_guard<mutex> lock(marketlock);
-    sm.setPrice(sm.getRandStock(), RandNumbers(5, 100));
+    sm.setPrice(sm.getRandStockB(), RandNumbers(5, 50));
 }
-
-// stock market
-
+// stock market, this thread will create a market of 300 stock that will be available for sale
 void CreateMarket(){
-    for(int i = 0; i < 50; i++) {
+    for(int i = 0; i < 300; i++) {
         Stock randomStock;
         sm.addStock(randomStock);
+        //sm.setPrice(randomStock, RandNumbers(10, 60));
     }
 }
 
-// Buying Thread
-
+// Buying Thread, this thread is used by the person. It waits for 2 second and then will buy stocks from the availble stocks in the market based on person's decision, however, the person has to have enough balance to buy.It also display the quantity bought
 void Person_Buy_Thread(){
-    //chrono::seconds waitTime(2);
+    //chrono::milliseconds waitTime(500);
     //this_thread::sleep_for(waitTime);
     lock_guard<mutex> lock(marketlock);//marketlock
     lock_guard<mutex> lock1(PersonLock);
-    Stock randomS = sm.getRandStock();
-    if(p.buyDecision(randomS, 10)) // change it
+    Stock randomS = sm.getRandStockB(); 
+    int  Quantity = RandQuantity(1, 10);
+    if(p.buyDecision(randomS, Quantity))
     {
-        cout << "Buy " << randomS.name << " quantity of: 10" << " $" <<randomS.price << endl;
-        p.buyStock(randomS, 10);
+        cout << "Buy " << randomS.name  << ", Quantity of: " << Quantity << " $" <<randomS.price << endl;
+        p.buyStock(randomS, Quantity);
     }
 }
-
-// selling thread
+// selling thread. This thread is used by the person. It waits for 2 seconds and then will sell based on the person's decision. It also display the quantity sold.
 void Person_Sell_Thread(){
-    //chrono::seconds waitTime(2);
+    //chrono::milliseconds waitTime(500);
     //this_thread::sleep_for(waitTime);
     lock_guard<mutex> lock(marketlock);
     lock_guard<mutex> lock1(PersonLock);
-    Stock myStock = p.getRandStock();
+    if (p.ownedStocks.size()==0) {
+        return;
+    }
+    Stock myStock = p.getRandStockP();
     if(p.sellDecision(sm.getStock(myStock)))
     {
+        int Quantity = p.getQuantity(myStock);
         p.sellStock(sm.getStock(myStock));
-        cout << "Sell " << sm.getStock(myStock).name << " quantity of: 10" << " $" << sm.getStock(myStock).price << endl;
+        cout << "Sold " << sm.getStock(myStock).name << ", Quantity of: " << Quantity << " $" << sm.getStock(myStock).price << endl;
     }
 }
 
@@ -88,17 +82,16 @@ void Person_Sell_Thread(){
 int main()
 {
     CreateMarket();
-    for(int i = 0; i < 200; i++) {
+    for(int i = 0; i < 10000; i++) {
+        if(i % 100) {
+            thread Server = thread(ServerThread);
+            Server.join();
+        }
         thread buyme = thread(Person_Buy_Thread);
         buyme.join();
-        if(i%10==0) {
-        thread Server = thread(ServerThread);
-        Server.join();
-        }
+        thread(PriceThread).join();
         thread sellme = thread(Person_Sell_Thread);
         sellme.join();
-        for(int j = 0; j < 5; j++)
-            thread(PriceThread);
     }
     
     return 0;

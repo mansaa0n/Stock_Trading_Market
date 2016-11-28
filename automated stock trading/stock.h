@@ -12,8 +12,6 @@
 #include <mutex>
 #include <vector>
 #include <random>
-#include <ctime>
-#include <condition_variable>
 #include <string>
 //#include <algorithm>
 
@@ -21,7 +19,6 @@ using namespace std;
 
 string RandomStock(){
     vector<string> SharesNames = {"BAC", "RF", "CHK", "GPS", "F", "WFC","GE","VALE","WFT","C","PFE","CRM","JPM","FCX","ANF","VRX","T","AKS","S","KEY","MS","KO","CX","X","WLL","KGC","IG","PG","ABX","MRO","HL","PBR","SWN","JCP","VALE.P","AUY","VZ","ECA","BBY","MT","NE","GGB","AGN","WMT","HPQ","LOW","BBD","CTL","MGM","UA","DNR","USB","GM","ETE","DIS","NEM","GG","HBI","XOM","COP","IAG","DAL","RAD","WNR","HST","CF","V","TCK","JNJ","MRK","BBT","ESV","CVS","NKE","RGC","RDC","CLF","GNW","ABT"};
-    
     random_device random_devi;
     mt19937 engine{random_devi()};
     uniform_int_distribution<int>dist(0, SharesNames.size()-1);
@@ -34,17 +31,22 @@ double RandNumbers(double fMin,double fMax){
     random_device random_devi;
     mt19937 engine{random_devi()};
     uniform_int_distribution<double>dist(fMin, fMax);
-    uniform_int_distribution<int>decimal(0,99);
+    uniform_int_distribution<int>decimal(1,99);
     return dist(engine)+(decimal(engine)*0.01);
 }
-
-class Stock{
+int RandQuantity( int fMin, int fMax){
+    random_device random_devi;
+    mt19937 engine{random_devi()};
+    uniform_int_distribution<int>dist(fMin, fMax);
+    return dist(engine);
+}
+class Stock{ 
 public:
     string name;
     double price;
     Stock() {
         this->name = RandomStock();
-        this->price = RandNumbers(10,30);
+        this->price = RandNumbers(5,30);
     }
     Stock(string n, double p) {
         this->name = n;
@@ -52,10 +54,11 @@ public:
     }
 };
 
-
 class StockMarket{
 public:
     vector<Stock> market;
+
+    
     void addStock(Stock s){
         // Adds a stock s into vector<Stock> market.
         market.push_back(s);
@@ -71,8 +74,9 @@ public:
     }
     void setPrice(Stock s, double newPrice){
         for(int i = 0; i < market.size(); i++) {
-            if(market[i].name == s.name)
+            if(market[i].name == s.name) {
                 market[i].price = newPrice;
+            }
         }
 
     }
@@ -82,7 +86,7 @@ public:
             cout << market[i].name << ", $" << market[i].price << endl;
         }
     }
-    Stock getRandStock(){
+    Stock getRandStockB(){
         random_device random_devi;
         mt19937 engine{random_devi()};
         uniform_int_distribution<int>dist(0,market.size()-1);
@@ -96,6 +100,7 @@ public:
         }
         return Stock();
     }
+    
 };
 
 #endif /* stock_h */
