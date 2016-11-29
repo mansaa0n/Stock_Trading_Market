@@ -8,17 +8,13 @@
 
 #ifndef person_h
 #define person_h
-
-#include <iostream>
-#include <thread>
-#include <mutex>
-#include <vector>
-#include <random>
-#include <string>
-#include "stock.h"
-
+#include <iostream> // I/O library
+#include <vector> //vector lib.
+#include <random> // random lib.
+#include <string> // string lib.
+#include "stock.h"  // custom file for the stocks
 using namespace std;
-
+// this func will generate random user from the list
 string RandNames()
 {
     vector<string> PeopleNames = {"Ahmed","Jhon", "Paul", "Daivd", "Sam", "Naithen", "Chandler", "Suzan", "Steve", "Joy", "Ross" };
@@ -28,7 +24,8 @@ string RandNames()
     string randName = PeopleNames[dist(engine)];
     return randName;
 }
-
+// This class is used as person class. It has name ,balance ownedstocks and quantity and all the decition making proprety.
+// inside the class there are 2 structs one for calling person and the other for the default
 class Person{
 public:
     string name;
@@ -54,14 +51,14 @@ public:
         this->Y = RandNumbers(60,90) * 0.01;
         this->originalBalance = this->balance;
     }
-    
+    // this func will be called when a buying Decision is true and add the stock to the user collection
     void buyStock(Stock s, int q) {
         if(balance < s.price * q) return;
         ownedStocks.push_back(s);
         quantityShares.push_back(q);
         balance -= s.price * q;
     }
-    
+// this func will be called when a selling Decision is true and add the stock to the user collection
     void sellStock(Stock s) {
         // Look for the name of the same stock
         for(int i = 0; i < ownedStocks.size(); i++) {
@@ -73,7 +70,7 @@ public:
             }
         }
     }
-    
+    // this function will make the buying decision
     bool buyDecision(Stock s, int q) {
         if(alreadyOwned(s))
             return false;
@@ -89,7 +86,7 @@ public:
         else
             return false;
     }
-    
+    // this function will make the selling decision
     bool sellDecision(Stock s) {
         // Look for the name of the same stock
         int i;
@@ -98,15 +95,12 @@ public:
                 break;
             }
         }
-        
-        double goodPrice = ownedStocks[i].price*(1+X);
-        double badPrice = ownedStocks[i].price*(1-Y);
-        
+        double goodPrice = ownedStocks[i].price*(1+X); //if start to make money sell
+        double badPrice = ownedStocks[i].price*(1-Y); // if start to get bad sell
         if(ownedStocks[i].price == s.price) {
             //cout << "==" << endl;
             return false;
         }
-        
         if(goodPrice <= s.price) {
             //cout << "GOOD PRICE: " << goodPrice << " <= " << s.price << endl;
             return true;
@@ -120,9 +114,8 @@ public:
             //cout << "NO-SELL-B: " << badPrice << " < " << s.price << endl;
             return false;
         }
-        
     }
-    
+    // this function will print the users name the balance and the yielding from the transactions
     void PrintPerson(){
         cout << name << " $" << balance << " Yielding $" << getYielding() <<  endl;
         for ( int i =0;  i< ownedStocks.size(); i++){
@@ -130,15 +123,14 @@ public:
         }
         return;
     }
-   
-    
+   // This function will get a random stock from the owned stocks so it can check if user want to sell
     Stock getRandStockP(){
         random_device random_devi;
         mt19937 engine{random_devi()};
         uniform_int_distribution<int>dist(0,ownedStocks.size()-1);
         return ownedStocks[dist(engine)];
     }
-
+ // this func will get the quantity owned from the stock
     int getQuantity(Stock S){
         for (int i=0 ; i < ownedStocks.size() ; i++){
             if (S.name == ownedStocks[i].name){
@@ -148,7 +140,7 @@ public:
         return 0;
         
     }
-    
+    // this bool func will check if the same stock is owned dont buy.
     bool alreadyOwned(Stock S){
         for (int i =0; i < ownedStocks.size();i++){
             if(ownedStocks[i].name == S.name){
@@ -157,6 +149,7 @@ public:
         }
         return false;
     }
+    // this funct will calculate the yielding
     double getYielding(){
         return balance - originalBalance;
     }
